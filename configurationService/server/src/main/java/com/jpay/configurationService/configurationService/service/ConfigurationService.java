@@ -6,6 +6,7 @@ import java.util.List;
 import javax.transaction.Transactional;
 
 import com.jpay.configurationService.configurationService.entities.Configuration;
+import com.jpay.configurationService.configurationService.entities.ConfigurationType;
 import com.jpay.configurationService.configurationService.repositories.ConfigurationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
@@ -16,6 +17,8 @@ public class ConfigurationService {
 
     @Autowired
     ConfigurationRepository configurationRepository;
+    @Autowired
+    ConfigurationService configurationTypeService;
 
     @Transactional
     public List<Configuration> findAllConfigurations(Pageable pageReq)
@@ -35,9 +38,12 @@ public class ConfigurationService {
     {
         return configurationRepository.save(configuration);
     }
+
     @Transactional
     public void deleteConfiguration(Integer id)
     {
+        Configuration configuration = configurationRepository.findById(id).get();
+
 //        configurationRepository.findById(id).orElseThrow(ConfigurationNotFoundException::new);
         configurationRepository.deleteById(id);
     }

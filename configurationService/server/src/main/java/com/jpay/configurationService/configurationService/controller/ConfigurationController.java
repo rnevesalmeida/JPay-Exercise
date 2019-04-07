@@ -48,9 +48,9 @@ public class ConfigurationController
     }
 
     @RequestMapping(value = "/configurations", method = RequestMethod.POST)
-    public ResponseEntity<ConfigurationResponseDTO> createConfiguration(@RequestBody ConfigurationDTO configurationResponseDto)
+    public ResponseEntity<ConfigurationResponseDTO> createConfiguration(@RequestBody ConfigurationDTO configurationDto)
     {
-        Configuration configuration = configurationService.saveConfiguration(configurationResponseDto.convertToObject());
+        Configuration configuration = configurationService.saveConfiguration(configurationDto.convertToObject());
         return new ResponseEntity<>(ConfigurationResponseDTO
                 .convertToDto(configuration),
                 HttpStatus.CREATED
@@ -58,16 +58,21 @@ public class ConfigurationController
     }
 
     @RequestMapping(value = "/configurations/{id}", method = RequestMethod.PUT)
-    public ResponseEntity<ConfigurationResponseDTO> updateConfiguration(@PathVariable("id") Integer id, @RequestBody ConfigurationDTO configurationResponseDto)
+    public ResponseEntity<ConfigurationResponseDTO> updateConfiguration(@PathVariable("id") Integer id, @RequestBody ConfigurationDTO configurationDto)
     {
         Configuration configuration = configurationService.findConfigurationById(id);
         if (configuration == null) {
             return new ResponseEntity(
-                    new ConfigurationNotFoundException("Unable to upate. Configuration with id " + id + " not found."),
+                    new ConfigurationNotFoundException("Unable to update. Configuration with id " + id + " not found."),
                     HttpStatus.NOT_FOUND
             );
         }
-        configurationService.saveConfiguration(configurationResponseDto.convertToObject());
+        configuration.setName(configurationDto.getName());
+        configuration.setScope(configurationDto.getScope());
+        configuration.setType(configurationDto.getType());
+        configuration.setValue(configurationDto.getValue());
+        
+        configurationService.saveConfiguration(configuration);
         return new ResponseEntity<>(ConfigurationResponseDTO.convertToDto(configuration), HttpStatus.OK);
     }
 

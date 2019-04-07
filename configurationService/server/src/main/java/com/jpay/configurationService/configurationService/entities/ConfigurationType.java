@@ -18,9 +18,12 @@ public class ConfigurationType {
     public ConfigurationType() {
     }
 
-    public ConfigurationType(Integer id, String name) {
-        this.id = id;
+    public ConfigurationType(String name) {
         this.name = name;
+    }
+
+    public Integer getId() {
+        return id;
     }
 
     public String getName() {

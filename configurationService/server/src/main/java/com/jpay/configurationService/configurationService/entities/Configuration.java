@@ -1,9 +1,9 @@
 package com.jpay.configurationService.configurationService.entities;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -22,7 +22,7 @@ public class Configuration
     @Column
     private String name;
 
-    @ManyToOne
+    @ManyToOne(cascade=CascadeType.PERSIST, fetch = FetchType.LAZY)
     @JoinColumn(name = "fk_type", referencedColumnName = "id")
     private ConfigurationType type;
     @Column
@@ -69,6 +69,22 @@ public class Configuration
     public Integer getValue()
     {
         return value;
+    }
+
+    public void setScope(String scope) {
+        this.scope = scope;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setType(ConfigurationType type) {
+        this.type = type;
+    }
+
+    public void setValue(Integer value) {
+        this.value = value;
     }
 
     public String toString()
