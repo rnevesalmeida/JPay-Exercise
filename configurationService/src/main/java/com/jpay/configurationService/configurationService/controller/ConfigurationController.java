@@ -1,12 +1,15 @@
 package com.jpay.configurationService.configurationService.controller;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import com.jpay.configurationService.configurationService.dtos.ConfigurationDTO;
 import com.jpay.configurationService.configurationService.dtos.ConfigurationResponseDTO;
 import com.jpay.configurationService.configurationService.entities.Configuration;
 import com.jpay.configurationService.configurationService.service.ConfigurationService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,21 +26,46 @@ public class ConfigurationController
     ConfigurationService configurationService;
 
     @RequestMapping(value = "/configurations", method = RequestMethod.GET)
-    public  ResponseEntity<List<Configuration>> getAllConfigurations()
+    public  ResponseEntity<List<ConfigurationResponseDTO>> getAllConfigurations()
     {
-        return new ResponseEntity<>(configurationService.getAllConfigurations(), HttpStatus.OK);
+        Integer firstResult = 1;
+        Integer maxResults = 5;
+
+        PageRequest pageReq
+                = PageRequest.of(firstResult, maxResults, Sort.by(Sort.Direction.DESC, "id"));
+        List<Configuration> configurations = configurationService.findAllConfigurations(pageReq);
+
+        return new ResponseEntity<>(configurations
+                .stream()
+                .map(configuration -> ConfigurationResponseDTO.convertToDto(configuration))
+                .collect(Collectors.toList()),
+                HttpStatus.OK
+        );
     }
 
     @RequestMapping(value = "/configurations/{id}", method = RequestMethod.GET)
     public  ResponseEntity<ConfigurationResponseDTO> getConfigurationById(@PathVariable("id") Integer id)
     {
-        return new ResponseEntity<>(ConfigurationResponseDTO.convertToDto(configurationService.getConfigurationById(id)), HttpStatus.OK);
+        return new ResponseEntity<>(ConfigurationResponseDTO.convertToDto(configurationService.findConfigurationById(id)), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/configurations/{name}", method = RequestMethod.GET)
-    public  ResponseEntity<List<Configuration>> getConfigurationByName(@PathVariable("name") String name)
+    public  ResponseEntity<List<ConfigurationResponseDTO>> getConfigurationByName(@PathVariable("name") String name)
     {
-        return new ResponseEntity<>(configurationService.getConfigurationsByName(name), HttpStatus.OK);
+        Integer firstResult = 1;
+        Integer maxResults = 5;
+
+        PageRequest pageReq
+                = PageRequest.of(firstResult, maxResults, Sort.by(Sort.Direction.DESC, "id"));
+        List<Configuration> configurations = configurationService.findConfigurationsByName(name, pageReq);
+
+        return new ResponseEntity<>(
+                configurations
+                .stream()
+                .map(configuration -> ConfigurationResponseDTO.convertToDto(configuration))
+                .collect(Collectors.toList()),
+                HttpStatus.OK
+        );
     }
 
     @RequestMapping(value = "/configurations", method = RequestMethod.POST)

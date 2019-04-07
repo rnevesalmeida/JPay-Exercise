@@ -1,6 +1,9 @@
 package com.jpay.configurationService.configurationService.entities;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -12,9 +15,13 @@ public class Configuration
     @Id
     @GeneratedValue (strategy = GenerationType.IDENTITY)
     private Integer id;
+    @Column(nullable = false)
     private String scope;
+    @Column(nullable = false)
     private String name;
+    @Enumerated(EnumType.STRING)
     private ConfigurationType type;
+    @Column(nullable = false)
     private Integer value;
 
     public Configuration(String scope, String name, ConfigurationType type, Integer value)

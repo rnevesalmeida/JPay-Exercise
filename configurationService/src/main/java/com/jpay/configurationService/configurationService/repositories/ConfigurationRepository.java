@@ -1,7 +1,5 @@
 package com.jpay.configurationService.configurationService.repositories;
 
-import java.util.List;
-
 import com.jpay.configurationService.configurationService.entities.Configuration;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
