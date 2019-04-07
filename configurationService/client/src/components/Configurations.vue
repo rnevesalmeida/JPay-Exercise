@@ -38,7 +38,7 @@
               <b-form-input type="text" v-model="model.name"></b-form-input>
             </b-form-group>
             <b-form-group label="Value">
-              <b-form-input type="text" v-model="model.value"></b-form-input>
+              <b-form-input type="number" v-model="model.value"></b-form-input>
             </b-form-group>
             <b-form-group label="Type">
               <b-form-input type="text" v-model="model.type"></b-form-input>
@@ -76,23 +76,23 @@ export default {
       this.model = Object.assign({}, configuration)
     },
     async saveConfiguration () {
-      console.log('cenas')
-      console.log(this.model)
       if (this.model.id) {
         await api.updateConfiguration(this.model.id, this.model)
+        this.$swal('Updated successfully!')
       } else {
         await api.createConfiguration(this.model)
+        this.$swal('Created successfully!')
       }
-      this.model = {} // reset form
+      this.model = {}
       await this.refreshConfigurations()
     },
     async deleteConfiguration (id) {
       if (confirm('Are you sure you want to delete this configuration?')) {
-        // if we are editing a post we deleted, remove it from the form
         if (this.model.id === id) {
           this.model = {}
         }
         await api.deleteConfiguration(id)
+        this.$swal('Deleted successfully!')
         await this.refreshConfigurations()
       }
     }
