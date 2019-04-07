@@ -9,7 +9,7 @@ import lombok.Getter;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Getter
 public class ConfigurationDTO {
-
+    Integer id;
     String scope;
     String name;
     ConfigurationType type;
@@ -17,6 +17,6 @@ public class ConfigurationDTO {
 
     public Configuration convertToObject()
     {
-        return new Configuration(scope, name, type, value);
+        return new Configuration(id, scope, name, type, value);
     }
 }

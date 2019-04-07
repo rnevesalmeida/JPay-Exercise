@@ -15,13 +15,13 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="configuration in configurations" :key="configuration.value">
+            <tr v-for="configuration in configurations" :key="configuration.id">
               <td>{{ configuration.scope }}</td>
               <td>{{ configuration.name }}</td>
               <td>{{ configuration.value }}</td>
               <td>{{ configuration.type }}</td>
               <td class="text-right">
-                <a href="#" @click.prevent="populateConfigurationToEdit(configuration)">Edit</a> -
+                <a href="#" @click.prevent="populateConfigurationsToEdit(configuration)">Edit</a> -
                 <a href="#" @click.prevent="deleteConfiguration(configuration.id)">Delete</a>
               </td>
             </tr>
@@ -31,11 +31,17 @@
       <b-col lg="3">
         <b-card :title="(model.id ? 'Edit Configuration ID#' + model.id : 'New Configuration')">
           <form @submit.prevent="saveConfiguration">
-            <b-form-group label="Title">
-              <b-form-input type="text" v-model="model.title"></b-form-input>
+            <b-form-group label="Scope">
+              <b-form-input type="text" v-model="model.scope"></b-form-input>
             </b-form-group>
-            <b-form-group label="Body">
-              <b-form-textarea rows="4" v-model="model.body"></b-form-textarea>
+            <b-form-group label="Name">
+              <b-form-input type="text" v-model="model.name"></b-form-input>
+            </b-form-group>
+            <b-form-group label="Value">
+              <b-form-input type="text" v-model="model.value"></b-form-input>
+            </b-form-group>
+            <b-form-group label="Type">
+              <b-form-input type="text" v-model="model.type"></b-form-input>
             </b-form-group>
             <div>
               <b-btn type="submit" variant="success">Save Configuration</b-btn>
@@ -70,6 +76,8 @@ export default {
       this.model = Object.assign({}, configuration)
     },
     async saveConfiguration () {
+      console.log('cenas')
+      console.log(this.model)
       if (this.model.id) {
         await api.updateConfiguration(this.model.id, this.model)
       } else {

@@ -10,6 +10,7 @@ import lombok.Getter;
 @Getter
 public class ConfigurationResponseDTO {
 
+    Integer id;
     String scope;
     String name;
     ConfigurationType type;
@@ -17,6 +18,6 @@ public class ConfigurationResponseDTO {
 
     public static ConfigurationResponseDTO convertToDto(Configuration configuration)
     {
-        return new ConfigurationResponseDTO(configuration.getScope(), configuration.getName(), configuration.getType(), configuration.getValue());
+        return new ConfigurationResponseDTO(configuration.getId(), configuration.getScope(), configuration.getName(), configuration.getType(), configuration.getValue());
     }
 }

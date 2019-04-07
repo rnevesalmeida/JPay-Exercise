@@ -6,10 +6,10 @@ import java.util.stream.Collectors;
 import com.jpay.configurationService.configurationService.dtos.ConfigurationDTO;
 import com.jpay.configurationService.configurationService.dtos.ConfigurationResponseDTO;
 import com.jpay.configurationService.configurationService.entities.Configuration;
+import com.jpay.configurationService.configurationService.exception.ConfigurationNotFoundException;
 import com.jpay.configurationService.configurationService.service.ConfigurationService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+@CrossOrigin
 @RestController
 public class ConfigurationController
 {
@@ -27,14 +28,9 @@ public class ConfigurationController
     ConfigurationService configurationService;
 
     @RequestMapping(value = "/configurations", method = RequestMethod.GET)
-    public  ResponseEntity<List<ConfigurationResponseDTO>> getAllConfigurations()
+    public  ResponseEntity<List<ConfigurationResponseDTO>> getAllConfigurations(Pageable page)
     {
-        Integer firstResult = 1;
-        Integer maxResults = 5;
-
-        PageRequest pageReq
-                = PageRequest.of(firstResult, maxResults, Sort.by(Sort.Direction.DESC, "id"));
-        List<Configuration> configurations = configurationService.findAllConfigurations(pageReq);
+        List<Configuration> configurations = configurationService.findAllConfigurations(page);
 
         return new ResponseEntity<>(configurations
                 .stream()
@@ -50,33 +46,27 @@ public class ConfigurationController
         return new ResponseEntity<>(ConfigurationResponseDTO.convertToDto(configurationService.findConfigurationById(id)), HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/configurations/{name}", method = RequestMethod.GET)
-    public  ResponseEntity<List<ConfigurationResponseDTO>> getConfigurationByName(@PathVariable("name") String name)
-    {
-        Integer firstResult = 1;
-        Integer maxResults = 5;
-
-        PageRequest pageReq
-                = PageRequest.of(firstResult, maxResults, Sort.by(Sort.Direction.DESC, "id"));
-        List<Configuration> configurations = configurationService.findConfigurationsByName(name, pageReq);
-
-        return new ResponseEntity<>(
-                configurations
-                .stream()
-                .map(configuration -> ConfigurationResponseDTO.convertToDto(configuration))
-                .collect(Collectors.toList()),
-                HttpStatus.OK
-        );
-    }
-
     @RequestMapping(value = "/configurations", method = RequestMethod.POST)
-    public ResponseEntity<ConfigurationResponseDTO> saveConfiguration(@RequestBody ConfigurationDTO configurationResponseDto)
+    public ResponseEntity<ConfigurationResponseDTO> createConfiguration(@RequestBody ConfigurationDTO configurationResponseDto)
     {
         Configuration configuration = configurationService.saveConfiguration(configurationResponseDto.convertToObject());
         return new ResponseEntity<>(ConfigurationResponseDTO.convertToDto(configuration), HttpStatus.CREATED);
     }
 
-    @RequestMapping(value = "/configurations/{id}", method = RequestMethod.POST)
+    @RequestMapping(value = "/configurations/{id}", method = RequestMethod.PUT)
+    public ResponseEntity<ConfigurationResponseDTO> updateConfiguration(@PathVariable("id") Integer id, @RequestBody ConfigurationDTO configurationResponseDto) {
+        Configuration configuration = configurationService.findConfigurationById(id);
+
+        if (configuration == null) {
+            return new ResponseEntity(new ConfigurationNotFoundException("Unable to upate. User with id " + id + " not found."),
+                    HttpStatus.NOT_FOUND);
+        }
+
+        configurationService.saveConfiguration(configurationResponseDto.convertToObject());
+        return new ResponseEntity<>(ConfigurationResponseDTO.convertToDto(configuration), HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/configurations/{id}", method = RequestMethod.DELETE)
     public void deleteConfiguration(@PathVariable("id") Integer id)
     {
         configurationService.deleteConfiguration(id);

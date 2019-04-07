@@ -24,6 +24,14 @@ public class Configuration
     @Column(nullable = false)
     private Integer value;
 
+    public Configuration(Integer id, String scope, String name, ConfigurationType type, Integer value) {
+        this.id = id;
+        this.scope = scope;
+        this.name = name;
+        this.type = type;
+        this.value = value;
+    }
+
     public Configuration(String scope, String name, ConfigurationType type, Integer value)
     {
         this.scope = scope;
@@ -34,6 +42,10 @@ public class Configuration
 
     public Configuration()
     {
+    }
+
+    public Integer getId() {
+        return id;
     }
 
     public String getScope() {

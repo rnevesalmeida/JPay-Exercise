@@ -16,10 +16,7 @@ let router = new Router({
     {
       path: '/configurations',
       name: 'ConfigurationsConfigurations',
-      component: Configurations,
-      meta: {
-        requiresAuth: true
-      }
+      component: Configurations
     }
   ]
 })
