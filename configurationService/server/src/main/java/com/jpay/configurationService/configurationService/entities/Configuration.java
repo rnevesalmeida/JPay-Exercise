@@ -7,6 +7,8 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 
 @Entity
 public class Configuration
@@ -15,13 +17,15 @@ public class Configuration
     @Id
     @GeneratedValue (strategy = GenerationType.IDENTITY)
     private Integer id;
-    @Column(nullable = false)
+    @Column
     private String scope;
-    @Column(nullable = false)
+    @Column
     private String name;
-    @Enumerated(EnumType.STRING)
+
+    @ManyToOne
+    @JoinColumn(name = "fk_type", referencedColumnName = "id")
     private ConfigurationType type;
-    @Column(nullable = false)
+    @Column
     private Integer value;
 
     public Configuration(Integer id, String scope, String name, ConfigurationType type, Integer value) {
