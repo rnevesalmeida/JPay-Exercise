@@ -15,7 +15,7 @@ let router = new Router({
     },
     {
       path: '/configurations',
-      name: 'ConfigurationsConfigurations',
+      name: 'Configurations',
       component: Configurations
     }
   ]
