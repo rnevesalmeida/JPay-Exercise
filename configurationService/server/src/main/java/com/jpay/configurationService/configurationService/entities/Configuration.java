@@ -10,19 +10,23 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
 @Entity
-public class Configuration
-{
+public class Configuration {
 
     @Id
-    @GeneratedValue (strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     @Column
     private String scope;
     @Column
     private String name;
 
-    @ManyToOne(cascade=CascadeType.PERSIST, fetch = FetchType.LAZY)
+    @ManyToOne(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
     @JoinColumn(name = "fk_type", referencedColumnName = "id")
     private ConfigurationType type;
     @Column
@@ -36,59 +40,17 @@ public class Configuration
         this.value = value;
     }
 
-    public Configuration(String scope, String name, ConfigurationType type, Integer value)
-    {
+    public Configuration(String scope, String name, ConfigurationType type, Integer value) {
         this.scope = scope;
         this.name = name;
         this.type = type;
         this.value = value;
     }
 
-    public Configuration()
-    {
+    public Configuration() {
     }
 
-    public Integer getId() {
-        return id;
-    }
-
-    public String getScope() {
-        return scope;
-    }
-
-    public String getName()
-    {
-        return name;
-    }
-
-    public ConfigurationType getType()
-    {
-        return type;
-    }
-
-    public Integer getValue()
-    {
-        return value;
-    }
-
-    public void setScope(String scope) {
-        this.scope = scope;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setType(ConfigurationType type) {
-        this.type = type;
-    }
-
-    public void setValue(Integer value) {
-        this.value = value;
-    }
-
-    public String toString()
-    {
+    public String toString() {
         String result = String.format(
                 "Configuration[id=%d, name='%s', type='%s', value='%s']%n",
                 id, name, type, value);
