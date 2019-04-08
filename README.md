@@ -11,6 +11,11 @@ Simple microservice that allows new configurations record.
 
         java -jar ./target/configurationService-1.0.0-SNAPSHOT.jar
 
+OR if you can't run the above commands try:
+
+  1. Run
+	 mvn spring-boot:run
+
 ## How to run - Client
 
 > Simple configurations service
